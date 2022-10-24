@@ -2,8 +2,8 @@
 # Project Specific
 ######################
 /build/www/**
-/src/test/javascript/coverage/
-/src/test/javascript/PhantomJS*/
+/recipe-data/src/main/test/javascript/coverage/
+/recipe-data/src/main/test/javascript/PhantomJS*/
 
 ######################
 # Node
