@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 public class Notes {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

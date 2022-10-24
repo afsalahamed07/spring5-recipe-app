@@ -11,11 +11,11 @@ import java.util.Set;
 @Entity
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String categoryName;
+    private String description;
 
     @ManyToMany(mappedBy = "categories")
     private Set<Recipe> recipes;
