@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +29,4 @@ public class Ingredient {
     @OneToOne //default fetch behaviour is eager
     private UnitOfMeasure unitOfMeasure;
 
-    public Ingredient(String description,UnitOfMeasure unitOfMeasure, BigDecimal amount) {
-        this.description = description;
-        this.amount = amount;
-        this.unitOfMeasure = unitOfMeasure;
-    }
 }

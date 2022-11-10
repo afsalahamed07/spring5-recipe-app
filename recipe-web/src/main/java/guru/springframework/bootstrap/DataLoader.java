@@ -5,30 +5,42 @@ import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMeasureRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 @AllArgsConstructor
 @Component
-public class DataLoader implements CommandLineRunner {
+public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private UnitOfMeasureRepository unitOfMeasureRepository;
     private RecipeRepository recipeRepository;
     private CategoryRepository categoryRepository;
 
+
     @Override
-    public void run(String... args) throws Exception {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        recipeRepository.saveAll(getRecipes());
+    }
+
+    private List<Recipe> getRecipes(){
+        List<Recipe> recipes = new ArrayList<>();
 
         UnitOfMeasure teaspoon;
         UnitOfMeasure whole;
         UnitOfMeasure tablespoon;
 
         Category italian;
+
+        Recipe guacamole = new Recipe();
 
         // Teaspoon
         if (unitOfMeasureRepository.findByDescription("Teaspoon").isPresent()) {
@@ -70,41 +82,47 @@ public class DataLoader implements CommandLineRunner {
         avocado.setDescription("Ripe Avocado");
         avocado.setUnitOfMeasure(whole);
         avocado.setAmount(new BigDecimal(2));
+        avocado.setRecipe(guacamole);
 
         Ingredient salt = new Ingredient();
         salt.setDescription("Kosher Salt");
         salt.setUnitOfMeasure(teaspoon);
         salt.setAmount(new BigDecimal(1/4));
+        salt.setRecipe(guacamole);
 
         Ingredient lime = new Ingredient();
         lime.setDescription("Lime or Lemon Juice");
         lime.setUnitOfMeasure(tablespoon);
         lime.setAmount(new BigDecimal(1));
+        lime.setRecipe(guacamole);
 
         Ingredient chilli = new Ingredient();
         chilli.setDescription("Serrano Chilli");
         chilli.setUnitOfMeasure(whole);
         chilli.setAmount(new BigDecimal(2));
+        chilli.setRecipe(guacamole);
 
         Ingredient cilantro = new Ingredient();
-        cilantro.setDescription("Cilantro finely choped");
+        cilantro.setDescription("Cilantro finely chopped");
         cilantro.setUnitOfMeasure(tablespoon);
         cilantro.setAmount(new BigDecimal(2));
+        cilantro.setRecipe(guacamole);
 
         Ingredient onion = new Ingredient();
         onion.setDescription("Minced Onion");
         onion.setUnitOfMeasure(tablespoon);
         onion.setAmount(new BigDecimal(4));
+        onion.setRecipe(guacamole);
 
         Notes notes = new Notes();
         notes.setRecipeNotes("Dont try this at home");
+        notes.setRecipe(guacamole);
 
-        Recipe guacamole = new Recipe();
         guacamole.setDescription("Perfect Guacamole");
         guacamole.setPerpTime(10);
         guacamole.setCookTime(0);
         guacamole.setServings(4);
-        guacamole.setCategories(new HashSet<>(Arrays.asList(
+        guacamole.setCategories(new HashSet<>(List.of(
                 italian
         )));
         guacamole.setNotes(notes);
@@ -117,8 +135,16 @@ public class DataLoader implements CommandLineRunner {
 
         // directions are stored in static/recipe_directions
         Path guacamoleDir = Path.of("recipe-data/src/main/resources/recipe_directions/guacamole.txt");
-        guacamole.setDirections(Files.readString(guacamoleDir));
+        try {
+            guacamole.setDirections(Files.readString(guacamoleDir));
+        } catch (IOException ex) {
+            System.out.println("IO exception occurred while reading recipe direction;");
+            ex.printStackTrace();
+        }
 
-        recipeRepository.save(guacamole);
+        recipes.add(guacamole);
+
+        return  recipes;
     }
+
 }

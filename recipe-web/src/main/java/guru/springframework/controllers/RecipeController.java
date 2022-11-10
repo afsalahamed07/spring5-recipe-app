@@ -1,6 +1,7 @@
 package guru.springframework.controllers;
 
 import guru.springframework.repositories.RecipeRepository;
+import guru.springframework.services.RecipeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/recipes")
 public class RecipeController {
-    private RecipeRepository recipeRepository;
+    private RecipeService recipeService;
 
     @RequestMapping({"", "/", "/index", "index.html"})
     public String listRecipes(Model model) {
 
-        model.addAttribute("recipes", recipeRepository.findAll());
+        model.addAttribute("recipes", recipeService.getRecipes());
 
         return "recipes/index";
     }
