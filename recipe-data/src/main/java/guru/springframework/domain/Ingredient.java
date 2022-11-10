@@ -1,6 +1,8 @@
 package guru.springframework.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +27,10 @@ public class Ingredient {
 
     @OneToOne //default fetch behaviour is eager
     private UnitOfMeasure unitOfMeasure;
+
+    public Ingredient(String description,UnitOfMeasure unitOfMeasure, BigDecimal amount) {
+        this.description = description;
+        this.amount = amount;
+        this.unitOfMeasure = unitOfMeasure;
+    }
 }

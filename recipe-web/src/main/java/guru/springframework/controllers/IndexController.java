@@ -25,6 +25,7 @@ public class IndexController {
 
         System.out.println("Cat id is: " + categoryOptional.get().getId());
         System.out.println("unit id is: " + unitOfMeasureOptional.get().getId());
+
         return "index";
     }
 }
